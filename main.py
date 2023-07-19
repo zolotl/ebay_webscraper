@@ -50,14 +50,17 @@ def scrape_product_data(wd, product_name, csv_path):
 
     # Get price on single page 
     price_li = []
-    num_pgs = 1
+    num_pgs = 2
 
     # get prices per page for num_pgs
     action = ActionChains(wd)
     for _ in range(0, num_pgs):
-        next_button = wd.find_element(By.XPATH, "//a[@class='pagination__next icon-link']")
-        get_price_on_page(wd, price_li)
-        action.move_to_element(next_button).click().perform()
+        try:
+            next_button = wd.find_element(By.XPATH, "//a[@class='pagination__next icon-link']")
+            get_price_on_page(wd, price_li)
+            action.move_to_element(next_button).click().perform()
+        except:
+            continue
 
     # remove outliers
     q1 = np.percentile(price_li, 25, method='midpoint')
